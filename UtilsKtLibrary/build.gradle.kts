@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.softyorch.utilsktlibrary"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 21
