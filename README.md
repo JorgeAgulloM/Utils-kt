@@ -46,7 +46,7 @@ dependencies {
     implementation("com.github.JorgeAgulloM:Utils-kt:Tag")
 }
 ```
-#### Tag: ![Alt text](image.png)
+#### Tag: [![](https://jitpack.io/v/JorgeAgulloM/Utils-kt.svg)](https://jitpack.io/#JorgeAgulloM/Utils-kt)
 
 <br>
 
