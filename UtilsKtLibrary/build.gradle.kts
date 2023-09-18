@@ -44,3 +44,16 @@ dependencies {
 }
 
 group = "com.github.JorgeAgulloM"
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+                groupId = "com.github.JorgeAgulloM"
+                artifactId = "UtilsLibrary"
+                version = "1.0.6"
+            }
+        }
+    }
+}
