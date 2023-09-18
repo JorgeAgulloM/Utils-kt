@@ -7,6 +7,16 @@ object SdkUtils {
     /**
      * Allows the implemented code to be executed if the value of sdk is met.
      *
+     * Checks if SDK version is >= 34 (UPSIDE_DOWN_CAKE).
+     *
+     * @return T or null
+     * */
+    inline fun <T> sdk34AndUp(onSdk34: () -> T): T? =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) onSdk34() else null
+
+    /**
+     * Allows the implemented code to be executed if the value of sdk is met.
+     *
      * Checks if SDK version is >= 33 (TIRAMISU).
      *
      * @return T or null
@@ -130,12 +140,22 @@ object SdkUtils {
     /**
      * Allows the implemented code to be executed if the value of sdk is met.
      *
+     * Checks if SDK version is < 34 (UPSIDE_DOWN_CAKE).
+     *
+     * @return T or null
+     * */
+    inline fun <T> sdk34Down(onSdk34: () -> T): T? =
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) onSdk34() else null
+
+    /**
+     * Allows the implemented code to be executed if the value of sdk is met.
+     *
      * Checks if SDK version is < 33 (TIRAMISU).
      *
      * @return T or null
      * */
-    inline fun <T> sdk33Down(onSdk32: () -> T): T? =
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) onSdk32() else null
+    inline fun <T> sdk33Down(onSdk33: () -> T): T? =
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) onSdk33() else null
 
     /**
      * Allows the implemented code to be executed if the value of sdk is met.
@@ -144,8 +164,8 @@ object SdkUtils {
      *
      * @return T or null
      * */
-    inline fun <T> sdk32Down(onSdk31: () -> T): T? =
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S_V2) onSdk31() else null
+    inline fun <T> sdk32Down(onSdk32: () -> T): T? =
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S_V2) onSdk32() else null
 
     /**
      * Allows the implemented code to be executed if the value of sdk is met.
@@ -248,6 +268,12 @@ object SdkUtils {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) onSdk22() else null
 
     //Variables
+
+    /**
+     * Facilitates the review of the condition SDK >= 34 (UPSIDE_DOWN_CAKE).
+     * @Return boolean value
+     * */
+    val sdk34AndUp = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
 
     /**
      * Facilitates the review of the condition SDK >= 33 (TIRAMISU).
