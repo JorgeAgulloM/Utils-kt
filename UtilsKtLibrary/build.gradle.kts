@@ -52,7 +52,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.JorgeAgulloM"
                 artifactId = "UtilsLibrary"
-                version = "0.0.1"
+                version = "0.1.1"
             }
         }
     }
