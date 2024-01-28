@@ -1,5 +1,6 @@
 package com.softyorch.utilsktlibrary
 
+import java.text.Normalizer
 import java.util.Locale
 
 object StringUtils {
@@ -12,4 +13,13 @@ object StringUtils {
             locale = Locale.getDefault()
         ) else it.toString()
     }
+
+    /**
+     * Removes accents, useful e.g. for string comparisons.
+     * */
+    fun String.deleteAccents(): String {
+        val normalizedText = Normalizer.normalize(this, Normalizer.Form.NFD)
+        return normalizedText.replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "")
+    }
+
 }
