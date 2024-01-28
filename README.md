@@ -53,15 +53,27 @@ dependencies {
 
 ### Utilities:
 
+## V0.1.2
+
+- Delete Accents
+
+    ```Text
+    Extension function to remove accents, useful e.g. for string comparisons. 
+    ```
+    ```kotlin
+    val spanishWord = "Configuración"
+    print(spanishWord.deleteAccents()) //= Configuracion
+    ```
+
 ## V0.1.1
 
 - Time Utils
 
     ```Text
-    Extension functions to pass from Calendar to String, biceversa and to obtain isolated values from them.
+    Extension functions to pass from Calendar to String, vice-versa and to obtain isolated values from them.
     ```
 
-  - Calendar to String ISO8601 formated
+  - Calendar to String ISO8601 formatted
 
     ```Text
     Transforms the date of a calendar to ISO8601 format without milliseconds and timezone
@@ -198,7 +210,7 @@ dependencies {
     }
     ```
 
-- String Capitalizer
+- String Capitalize
 
     ```text
     Extension function that simplifies the capitalisation of a text.
