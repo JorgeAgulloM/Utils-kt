@@ -1,118 +1,81 @@
 package com.softyorch.utilsktlibrary
 
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 object TimeUtils {
 
-    private val monthListValues = listOf(0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+    // Formateadores estándar para evitar recrearlos constantemente
+    private val isoFormatterWithSeconds = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT)
+    private val isoFormatterWithoutSeconds = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ROOT)
+    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
+    private val timeFormatter = SimpleDateFormat("HH:mm:ss", Locale.ROOT)
 
     /**
-     * Transforms the date of a calendar to ISO8601 format without milliseconds and timezone
-     * by returning the result in a String.
-     *
-     * Calendar -> String
-     *
-     * In case of error, it will return a string with the same format as expected but with the
-     * values set to 0.
+     * Formats a Calendar date into an ISO8601 string without milliseconds and timezone.
      */
     fun Calendar.toDateFormattedISO8601(): String = try {
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val currentDate = sdf.format(this.time)
-        currentDate.split(" ")[0] + "T" + currentDate.split(" ")[1]
+        isoFormatterWithSeconds.format(this.time)
     } catch (e: Exception) {
         e.printStackTrace()
         "0000-00-00T00:00:00"
     }
 
     /**
-     * Returns a String of the date of a Calendar.
-     *
-     * Calendar -> String
-     *
-     * In case of error, it will return a string with the same format as expected but with the
-     * values set to 0.
+     * Returns a formatted string (yyyy-MM-dd) of a Calendar's date.
      */
     fun Calendar.getDateOfNow(): String = try {
-        val year = this.get(Calendar.YEAR)
-        val month = this.get(Calendar.MONTH)
-        val day = this.get(Calendar.DAY_OF_MONTH)
-        "$year-$month-$day"
+        dateFormatter.format(this.time)
     } catch (e: Exception) {
         e.printStackTrace()
         "0000-00-00"
     }
 
     /**
-     * Returns a String of the time of a Calendar.
-     *
-     * Calendar -> String
-     *
-     * In case of error, it will return a string with the same format as expected but with the
-     * values set to 0.
+     * Returns a formatted string (HH:mm:ss) of a Calendar's time in 24-hour format.
      */
     fun Calendar.getCurrentTimeOfNow(): String = try {
-        val hour = this.get(Calendar.HOUR)
-        val minutes = this.get(Calendar.MINUTE)
-        val seconds = this.get(Calendar.SECOND)
-        "$hour:$minutes:$seconds"
+        timeFormatter.format(this.time)
     } catch (e: Exception) {
         e.printStackTrace()
         "00:00:00"
     }
 
     /**
-     * Transforms a full String date into a Calendar. No need to pass seconds.
-     *
-     * String -> Calendar
-     *
-     * On error, will return a Calendar.getInstance() value.
+     * Parses a String date (ISO8601 format, with or without seconds) into a Calendar.
      */
-    fun String.toCalendarTime(): Calendar = try {
-        Calendar.getInstance().apply {
-            val noSeconds = -1
-            val seconds = if ("." in this@toCalendarTime)
-                this@toCalendarTime.split(".")[1].toInt()
-            else noSeconds
-
-            val minutes = this@toCalendarTime.split(":")[1].toInt()
-            val hours = this@toCalendarTime.split("T")[1].split(":")[0].toInt()
-            val day = this@toCalendarTime.split("-")[2].split("T")[0].toInt()
-            val month = this@toCalendarTime.split("-")[1].split("-")[0].toInt()
-            val year = this@toCalendarTime.split("-")[0].toInt()
-            if (seconds == noSeconds)
-                set(year, monthListValues[month], day, hours, minutes)
-            else
-                set(year, monthListValues[month], day, hours, minutes, seconds)
+    fun String.toCalendarTime(): Calendar {
+        val calendar = Calendar.getInstance()
+        try {
+            // Intenta primero parsear con el formato que incluye segundos
+            calendar.time = isoFormatterWithSeconds.parse(this)!!
+        } catch (_: ParseException) {
+            try {
+                // Si falla, intenta parsear con el formato sin segundos
+                calendar.time = isoFormatterWithoutSeconds.parse(this)!!
+            } catch (e2: ParseException) {
+                e2.printStackTrace()
+                // En caso de error, devuelve una instancia de Calendar en el momento actual
+                return Calendar.getInstance()
+            }
         }
-    } catch (e: Exception) {
-        e.printStackTrace()
-        Calendar.getInstance()
+        return calendar
     }
 
     /**
-     * Returns from an ISO8601 String dateTime value, the date value in String type.
-     *
-     * String -> String
-     *
-     * In case of error, it will return a string with the same format as expected but with the
-     * values set to 0.
+     * Extracts the date part (yyyy-MM-dd) from an ISO8601 String.
      */
     fun String.getDateOfNow(): String = try {
         this.split("T")[0]
     } catch (e: Exception) {
         e.printStackTrace()
-        "0000-00-00"
+        this
     }
 
     /**
-     * Returns from an ISO8601 String dateTime value, the time value in String type.
-     *
-     * String -> String
-     *
-     * In case of error, it will return a string with the same format as expected but with the
-     * values set to 0.
+     * Extracts the time part (HH:mm:ss) from an ISO8601 String.
      */
     fun String.getCurrentTimeOfNow(): String = try {
         this.split("T")[1]
@@ -122,16 +85,17 @@ object TimeUtils {
     }
 
     /**
-     * Removes seconds from a String time offset.
-     *
-     * String 12:23:34 -> String 12:23
-     *
-     * */
+     * Removes the seconds part from a time string (e.g., "12:23:34" -> "12:23").
+     * If the string does not contain seconds, it returns it unchanged.
+     */
     fun String.deleteSeconds(): String = try {
-        this.substringBeforeLast(":")
+        if (this.count { it == ':' } >= 2) {
+            this.substringBeforeLast(":")
+        } else {
+            this
+        }
     } catch (e: Exception) {
         e.printStackTrace()
         this
     }
-
 }
