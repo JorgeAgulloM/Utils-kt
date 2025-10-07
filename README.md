@@ -1,16 +1,14 @@
-# Utils Library
+# Utils-kt Library
 
-##### Last update 2023/09/18
-##### Version 0.0.1
+##### Last update 2025/10/06
+##### Version 0.1.3
 
-#### Kotlin library with utilities for reviewing project SDK levels, Toast object visualisation, Capitalisation and Log.
+#### A Kotlin library with utilities for Android development. Now updated to support SDK 36, Java 21 (minSdk 23), and fully tested.
 
 ### How to
 To get a Git project into your build:
 
 Step 1. Add the JitPack repository to your build file
-
-Add it in your root build.gradle at the end of repositories:
 
 - Groovy
 ```groovy
@@ -51,174 +49,101 @@ dependencies {
 
 <br>
 
-### Utilities:
+### Testing
 
-## V0.1.2
-
-- Delete Accents
-
-    ```Text
-    Extension function to remove accents, useful e.g. for string comparisons. 
-    ```
-    ```kotlin
-    val spanishWord = "Configuración"
-    print(spanishWord.deleteAccents()) //= Configuracion
-    ```
-
-## V0.1.1
-
-- Time Utils
-
-    ```Text
-    Extension functions to pass from Calendar to String, vice-versa and to obtain isolated values from them.
-    ```
-
-  - Calendar to String ISO8601 formatted
-
-    ```Text
-    Transforms the date of a calendar to ISO8601 format without milliseconds and timezone
-    by returning the result in a String.
-    ```
-    ```Kotlin
-    val calendar = Calendar.getInstance()
-    println(calendar.toDateFormattedISO8601())
-    ```
-
-  - Calendar to String Date
-
-    ```Text
-    Returns a String of the date of a Calendar.
-    ```
-    ```Kotlin
-    val calendar = Calendar.getInstance()
-    println(calendar.getDateOfNow())
-    ```
-
-  - Calendar to String Time
-
-    ```Text
-    Returns a String of the time of a Calendar.
-    ```
-    ```Kotlin
-    val calendar = Calendar.getInstance()
-    println(calendar.getCurrentTimeOfNow())
-    ```
-
-  - Full Date String to Calendar
-
-    ```Text
-    Transforms a full String date into a Calendar. No need to pass seconds.
-    ```
-    ```Kotlin
-    val stringDate = "2023-09-21T12:23:34"
-    println(stringDate.toCalendarTime())
-    ```
-
-  - Full Date String to Date String
-
-    ```Text
-    Returns from an ISO8601 String dateTime value, the date value in String type.
-    ```
-    ```Kotlin
-    val stringDate = "2023-09-21T12:23:34"
-    println(stringDate.getDateOfNow()) // -> "2023-09-21"
-    ```
-
-  - Full Date String to Time String
-
-    ```Text
-    Returns from an ISO8601 String dateTime value, the time value in String type.
-    ```
-    ```Kotlin
-    val stringDate = "2023-09-21T12:23:34"
-    println(getCurrentTimeOfNow()) // -> "12:23:34"
-    ```
-
-  - Time String to Time String without seconds
-
-    ```Text
-    Removes seconds from a String time offset.
-    ```
-    ```Kotlin
-    val stringTime = "12:23:34"
-    println(stringTime.deleteSeconds()) // -> "12:23"
-    ```
+This library is now equipped with unit tests to ensure the reliability and proper functioning of its utilities.
 
 <br>
 
-## V0.0.1
+### Utilities
 
-- SDK level assessment
+### SdkUtils
 
-    ```text
-    - Inline functions that allow you to run your code if the required SDK version is met.
-    - Boolean variables that allow you to evaluate whether the required SDK level is met.
-    ```
+Object with inline functions and boolean variables to check the device's SDK version. It supports versions from SDK 24 (Nougat) to SDK 36 (Baklava).
+
+- **Execute code on a specific SDK version or higher:**
+
     ```kotlin
+    import com.softyorch.utilsktlibrary.SdkUtils.sdk36AndUp
 
-    import com.softyorch.utils.SdkUtils.sdk33AndUp
-    import com.softyorch.utils.SdkUtils.sdk31AndUp
-
-    class MainActivity : AppCompatActivity() {
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_main)
-
-            sdk33AndUp {
-                println("This code will work on API33 or higher")
-            }
-
-            if (sdk31AndUp)
-                println("This code will work on API31 or higher")
-
-        }
+    sdk36AndUp {
+        // This code will run only on devices with SDK 36 (Baklava) or higher.
+        println("This is for API 36+")
     }
     ```
 
-- Log writer
+- **Execute code below a specific SDK version:**
 
-    ```text
-    - Extension function that simplifies the use of the Android Logger.
-    ```
     ```kotlin
-    import com.softyorch.utils.LogUtil.logInfo
-    import com.softyorch.utils.LogUtil.logDebug
+    import com.softyorch.utilsktlibrary.SdkUtils.sdk28Down
 
-    val myString: String
-    myString.logInfo("Hi, this is an Info Log")
-
-    //or
-
-    "text".logDebug("Hi, this is an Info Log")
-    ```
-
-- Toast Maker
-
-    ```text
-    Extension function that simplifies the way to invoke a Toast message    
-    ```
-    ```kotlin
-    import com.softyorch.utils.ContextUtils.showToast
-
-    class MainActivity : AppCompatActivity() {
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_main)
-
-            this.showToast("message")
-        }
+    sdk28Down {
+        // This code will run only on devices with an SDK lower than 28 (Pie).
+        println("This is for devices older than Pie")
     }
     ```
 
-- String Capitalize
+- **Boolean check for SDK version:**
 
-    ```text
-    Extension function that simplifies the capitalisation of a text.
-    ```
     ```kotlin
-    import com.softyorch.utils.StringUtils.toCapitalized
-    
+    import com.softyorch.utilsktlibrary.SdkUtils.sdk23AndUp
+
+    if (sdk23AndUp) {
+        // This code will run only on devices with SDK 23 (S) or higher.
+        println("This is for API 23+")
+    }
+    ```
+
+### StringUtils
+
+- **Delete Accents**
+
+    Extension function to remove accents from a string.
+    ```kotlin
+    val spanishWord = "Configuración"
+    print(spanishWord.deleteAccents()) // Outputs: Configuracion
+    ```
+
+- **Capitalize**
+
+    Extension function that capitalizes the first letter of a string.
+    ```kotlin
     val myText = "hola, mundo"
-    myText.toCapitalized()
-    println("Hola, mundo")
+    println(myText.toCapitalized()) // Outputs: Hola, mundo
+    ```
+
+### TimeUtils
+
+Extension functions to convert `Calendar` objects to `String` and vice-versa.
+
+- **Calendar to String ISO8601 formatted**
+    ```kotlin
+    val calendar = Calendar.getInstance()
+    println(calendar.toDateFormattedISO8601()) // e.g., 2024-05-23T10:30:00
+    ```
+
+- **String (ISO8601) to Calendar**
+    ```kotlin
+    val stringDate = "2024-05-23T10:30:00"
+    val calendar = stringDate.toCalendar()
+    ```
+
+### ContextUtils
+
+- **Show Toast**
+
+    Extension function on `Context` to simplify showing a Toast message.
+    ```kotlin
+    // In an Activity or any other Context
+    this.showToast("Your message")
+    ```
+
+### LogUtils
+
+- **Log Writer**
+
+    Extension functions on `String` that simplify the use of Android's Logger.
+    ```kotlin
+    "My message".logInfo("MyTag")
+    "Debug data".logDebug("MyTag")
     ```
